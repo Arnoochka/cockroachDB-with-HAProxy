@@ -58,5 +58,33 @@ docker exec -it roach1 cockroach sql --insecure --host=haproxy:26257 --execute="
 ```bash
 docker exec -it roach1 cockroach sql --execute="ALTER RANGE default CONFIGURE ZONE USING num_replicas=5;" --insecure --host=roach1:26257
 ```
-
 Степень репликации установлена на 5
+
+Для проверки количества репликаций:
+
+```bash
+docker exec -it roach1 cockroach sql --execute="SHOW ZONE CONFIGURATION FOR RANGE default;" --insecure --host=roach1:26257
+
+```
+
+**Добавить новый узел:**
+```bash
+docker volume create roach6
+
+docker run -d \
+--name=roach6 \
+--hostname=roach6 \
+--net=roachnet \
+-p 26262:26262 \
+-p 8085:8085 \
+-v "roach6:/cockroach/cockroach-data" \
+cockroachdb/cockroach:v25.1.2 start \
+  --advertise-addr=roach6:26357 \
+  --http-addr=roach6:8085 \
+  --listen-addr=roach6:26357 \
+  --sql-addr=roach6:26262 \
+  --insecure \
+  --join=roach1:26357,roach2:26357,roach3:26357,roach4:26357,roach5:26357
+  ```
+
+  Для примера шестой

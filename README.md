@@ -17,7 +17,7 @@ docker network inspect roachnet
 Проверить состояния всех узлов в кластере:
 
 ```bash
-docker exec -it roach1 cockroach node status --insecure
+docker exec -it roach1 cockroach node status --insecure --host=roach1:26257
 ```
 
 Дополнительные команды для работы с кластером можно найти в `commands.md`
