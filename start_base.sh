@@ -79,6 +79,3 @@ docker exec -it roach1 ./cockroach --host=roach1:$listen_port init --insecure
 # Пересобираем HAProxy с обновленным конфигом
 docker build -t my-haproxy .
 docker run -d --name haproxy --net=roachnet -v $(pwd)/haproxy.cfg:/usr/local/etc/haproxy/haproxy.cfg my-haproxy
-
-docker exec -it roach1 cockroach sql --insecure --host=haproxy:26257 --execute="SET CLUSTER SETTING server.time_until_store_dead = '30s';"
-docker exec -it roach1 cockroach sql --execute="ALTER RANGE default CONFIGURE ZONE USING num_replicas=3;" --insecure --host=roach1:26257в
